@@ -1,0 +1,48 @@
+version: '3.7'
+
+services:
+  node-ts-boilerplate:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: ts-tdd-node-boilerplate
+    depends_on:
+      - postgres-db
+      - mongo-db
+    networks:
+      - app-connect
+    volumes:
+      - ./src:/app/src
+    command: yarn start
+
+  mongo-db:
+    container_name: mongo-db
+    image: 'mongo'
+    restart: unless-stopped
+    volumes:
+      - mongo-db-data:/data
+    ports:
+      - '27017:27017'
+    networks:
+      - app-connect
+
+  postgres-db:
+    container_name: postgres-db
+    image: postgres:11
+    restart: unless-stopped
+    volumes:
+      - postgres-db-data:/data
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+    networks:
+      - app-connect
+
+volumes:
+  postgres-db-data:
+  mongo-db-data:
+
+networks:
+  app-connect:
+    driver: bridge
