@@ -12,4 +12,4 @@ USER node
 
 EXPOSE 3333
 
-CMD [ "node", "build/index.js" ]
+CMD [ "node", "build/server.js" ]
